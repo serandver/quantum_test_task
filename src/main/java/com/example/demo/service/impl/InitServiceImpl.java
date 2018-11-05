@@ -48,7 +48,7 @@ public class InitServiceImpl implements InitService {
             String name = initName(employee);
             String surname = initSurname();
             fullName = name + " " + surname;
-            if (fullNameValidator.validate(fullName)) {
+            if (!fullNameValidator.validate(fullName)) {
                 isFullNameUnique = true;
             }
         }
@@ -75,7 +75,7 @@ public class InitServiceImpl implements InitService {
         while (isSurnameInvalid) {
             int randomSurnameIndex = localRandom.nextInt(9);
             surname = SURNAMES[randomSurnameIndex];
-            if (surnameDuplicatesValidator.validate(surname)) {
+            if (!surnameDuplicatesValidator.validate(surname)) {
                 isSurnameInvalid = false;
             }
         }
