@@ -4,6 +4,7 @@ import com.example.demo.model.Dto;
 import com.example.demo.model.Employee;
 import com.example.demo.service.EmployeeService;
 import com.example.demo.service.InitService;
+import com.example.demo.service.impl.HibernateSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class Controller {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private HibernateSearchService searchservice;
 
     @Value("${welcome.message}")
     private String message;
@@ -46,6 +50,18 @@ public class Controller {
     public String getAllEmployees(Model model) {
         List<Employee> employees = employeeService.getAllEmployees();
         model.addAttribute("employees", employees);
+        return "employees";
+    }
+
+    @RequestMapping(value = "/employees", method = RequestMethod.POST)
+    public String search(@RequestParam(value = "search", required = false) String q, Model model) {
+        List<Employee> searchResults = null;
+        try {
+            searchResults = searchservice.fuzzySearch(q);
+        } catch (Exception ex) {
+            //NOP
+        }
+        model.addAttribute("search", searchResults);
         return "employees";
     }
 }

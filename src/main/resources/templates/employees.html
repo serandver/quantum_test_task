@@ -1,10 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Title</title>
 </head>
 <body>
+<form action="#" th:action="@{/employees}" th:object="${search}" method="POST">
+    <label for="search_input">Search:</label>
+    <input name="search" id="search"></input>
+    <div th:if="${not #lists.isEmpty(search)}">
+        <h2>Search Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Salary</th>
+                    <th>Sex</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="search : ${search}">
+                    <td th:text="${search.name}"></td>
+                    <td th:text="${search.city}"></td>
+                    <td th:text="${search.salary}"></td>
+                    <td th:text="${search.sex}"></td>
+                    <td th:text="${search.position}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
 <div>
     <table border="1">
         <tr>
