@@ -8,13 +8,13 @@
 
 <div>
     <div>
-        <h1 th:utext="${message}"></h1>
+        <h1>Hello! Fill the form to generate employees</h1>
         <form th:action="@{/index}"
               th:object="${dto}" method="POST">
             I want to generate a list with
             <input type="text" th:field="*{quantity}"/> employees
             <br/>
-            <input type="submit" value="Create" />
+            <input type="submit" value="Generate" />
         </form>
     </div>
 </div>

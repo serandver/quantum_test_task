@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -19,31 +18,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> getAllEmployees() {
         List<Employee> employees = new ArrayList<>();
-        Iterable<Employee> repositoryAll = repository.findAll();
-        for (Employee employee : repositoryAll) {
-            employees.add(employee);
-        }
+        repository.findAll().forEach(employees::add);
         return employees;
-    }
-
-    @Override
-    public List<Employee> findByCity(String city) {
-        return getAllEmployees().stream()
-                .filter(t -> t.getCity().equals(city))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Employee> findByPosition(String position) {
-        return getAllEmployees().stream()
-                .filter(t -> t.getPosition().equals(position))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Employee> findBySalary(double salary) {
-        return getAllEmployees().stream()
-                .filter(t -> (t.getSalary() > salary))
-                .collect(Collectors.toList());
     }
 }

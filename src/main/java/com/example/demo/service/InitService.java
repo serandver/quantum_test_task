@@ -14,6 +14,6 @@ public interface InitService {
     int MAXIMUM_SALARY = 15000;
     String EMPTY_STRING = "";
 
-    Employee initEmployee(Employee employee);
+    Employee initNewEmployee();
     void generateEmployeeCollection(int quantity);
 }

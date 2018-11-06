@@ -3,6 +3,8 @@ package com.example.demo.service.impl;
 import com.example.demo.model.Employee;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.service.InitService;
+import com.example.demo.service.validation.SurnameDuplicatesValidator;
+import com.example.demo.service.validation.UniqueFullNameValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,25 +26,51 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void generateEmployeeCollection(int quantity) {
-        Employee employee = new Employee();
         for (int i = 0; i < quantity; i++) {
-            employee = initEmployee(employee);
+            Employee employee = initNewEmployee();
             repository.save(employee);
         }
     }
 
     @Override
-    public Employee initEmployee(Employee employee) {
+    public Employee initNewEmployee() {
+        Employee employee = new Employee();
         setRandomSalary(employee);
         setRandomPosition(employee);
         setRandomCity(employee);
         setRandomSex(employee);
-        setName(employee);
+        setRandomName(employee);
         return employee;
     }
 
-    private void setName(Employee employee) {
-        String fullName = "";
+    private void setRandomSalary(Employee employee) {
+        int randomSalary = localRandom.nextInt(MINIMUM_SALARY, MAXIMUM_SALARY + 1);
+        employee.setSalary(randomSalary);
+    }
+
+    private void setRandomPosition(Employee employee) {
+        int randomIndex = localRandom.nextInt(POSITIONS.length);
+        employee.setPosition(POSITIONS[randomIndex]);
+    }
+
+    private void setRandomCity(Employee employee) {
+        int randomIndex = localRandom.nextInt(CITIES.length);
+        employee.setCity(CITIES[randomIndex]);
+    }
+
+    private void setRandomSex(Employee employee) {
+        // woman/man ratio is 40%/60%
+        int randomIndex = localRandom.nextInt(10);
+        if (randomIndex < 4) {
+            employee.setSex(WOMAN_SEX);
+        }
+        else {
+            employee.setSex(MAN_SEX);
+        }
+    }
+
+    private void setRandomName(Employee employee) {
+        String fullName = EMPTY_STRING;
         boolean isFullNameUnique = false;
         while (!isFullNameUnique) {
             String name = initName(employee);
@@ -59,52 +87,26 @@ public class InitServiceImpl implements InitService {
         String name = EMPTY_STRING;
 
         if (employee.getSex().equals(MAN_SEX)) {
-            int randomNameIndex = localRandom.nextInt(5);
+            int randomNameIndex = localRandom.nextInt(MAN_SEX.length());
             name = MEN_NAMES[randomNameIndex];
         }
         else if (employee.getSex().equals(WOMAN_SEX)) {
-            int randomIndex = localRandom.nextInt(5);
+            int randomIndex = localRandom.nextInt(WOMAN_NAMES.length);
             name = WOMAN_NAMES[randomIndex];
         }
         return name;
     }
 
     private String initSurname() {
-        String surname = "";
+        String surname = EMPTY_STRING;
         boolean isSurnameInvalid = true;
         while (isSurnameInvalid) {
-            int randomSurnameIndex = localRandom.nextInt(9);
+            int randomSurnameIndex = localRandom.nextInt(SURNAMES.length);
             surname = SURNAMES[randomSurnameIndex];
             if (!surnameDuplicatesValidator.validate(surname)) {
                 isSurnameInvalid = false;
             }
         }
         return surname;
-    }
-
-    private void setRandomSex(Employee employee) {
-        // woman/man ratio is 40%/60%
-        int randomIndex = localRandom.nextInt(10);
-        if (randomIndex < 4) {
-            employee.setSex(WOMAN_SEX);
-        }
-        else {
-            employee.setSex(MAN_SEX);
-        }
-    }
-
-    private void setRandomCity(Employee employee) {
-        int randomIndex = localRandom.nextInt(0, CITIES.length);
-        employee.setCity(CITIES[randomIndex]);
-    }
-
-    private void setRandomPosition(Employee employee) {
-        int randomIndex = localRandom.nextInt(0, POSITIONS.length);
-        employee.setPosition(POSITIONS[randomIndex]);
-    }
-
-    private void setRandomSalary(Employee employee) {
-        int randomSalary = localRandom.nextInt(MINIMUM_SALARY, MAXIMUM_SALARY + 1);
-        employee.setSalary(Math.round(randomSalary));
     }
 }

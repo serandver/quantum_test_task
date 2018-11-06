@@ -4,11 +4,10 @@ import com.example.demo.model.Dto;
 import com.example.demo.model.Employee;
 import com.example.demo.service.EmployeeService;
 import com.example.demo.service.InitService;
-import com.example.demo.service.impl.HibernateSearchService;
+import com.example.demo.service.search.HibernateSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +27,8 @@ public class Controller {
     @Autowired
     private HibernateSearchService searchservice;
 
-    @Value("${welcome.message}")
-    private String message;
-
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
     public String getStartPage(Model model) {
-        model.addAttribute("message", message);
         Dto dto = new Dto();
         model.addAttribute("dto", dto);
         return "index";
@@ -53,7 +48,7 @@ public class Controller {
         return "employees";
     }
 
-    @RequestMapping(value = "/employees", method = RequestMethod.POST)
+    @RequestMapping(value = {"/employees"}, method = RequestMethod.POST)
     public String search(@RequestParam(value = "search", required = false) String q, Model model) {
         List<Employee> searchResults = null;
         try {
